@@ -1,11 +1,9 @@
 import React, { useState } from "react";
+import ToDoItem from "./ToDoItem";
 
 function App() {
   const [itemTitle, setItem] = useState("");
-  const [itemList, setList] = useState([{
-    id: 0,
-    name: "Add Items",
-  }]);
+  const [itemList, setList] = useState([]);
 
   const handleChange = (event) => {
     const newValue = event.target.value;
@@ -13,15 +11,18 @@ function App() {
   };
 
   function addItem() {
-    setList((preItems) => [...preItems, {id: preItems.length+1,name: itemTitle}]);
+    setList((preItems) => [...preItems, itemTitle]);
     setItem("");
   }
-
-//   function deleteItem(deleteId){
-//     const deleteIndex=itemList.indexOf({id: deleteId});
-//     const newList=itemList.splice(deleteIndex,1);
-//     setList(newList);
-//   }
+  function deleteItem(id) {
+    setList((preItems)=>{
+        return preItems.filter(
+            (item,index)=>{
+                return index!=id;
+            }
+        );
+    });
+  }
 
   return (
     <div className="container">
@@ -36,12 +37,13 @@ function App() {
       </div>
       <div>
         <ul>
-          {itemList.map((todoItem) => (
-              <li>{todoItem.name}
-              {/* <button onClick={deleteItem(todoItem.id)}> */}
-              <img src="trash.svg" />
-              {/* </button> */}
-              </li>
+          {itemList.map((todoItem, itemIndex) => (
+            <ToDoItem
+              key={itemIndex}
+              id={itemIndex}
+              name={todoItem}
+              isChecked={deleteItem}
+            />
           ))}
         </ul>
       </div>
